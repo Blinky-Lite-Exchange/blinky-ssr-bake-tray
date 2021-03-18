@@ -67,7 +67,7 @@
   "dutyFactor": {
     "action": "reading",
     "type": "scalar",
-    "value": 0,
+    "value": 3.3,
     "unit": "%",
     "alarm": {
       "value": 0,
@@ -87,7 +87,7 @@
   "rampTemp": {
     "action": "reading",
     "type": "scalar",
-    "value": 31.5,
+    "value": 27.98,
     "unit": "C",
     "alarm": {
       "value": 0,
@@ -104,10 +104,30 @@
       }
     }
   },
+  "rampError": {
+    "action": "reading",
+    "type": "scalar",
+    "value": -0.53,
+    "unit": "C",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": -10,
+        "low": -5,
+        "high": 5,
+        "hihi": 10
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
   "temperature": {
     "action": "reading",
     "type": "scalar",
-    "value": 31.44,
+    "value": 27.52,
     "unit": "C",
     "alarm": {
       "value": 0,
@@ -147,7 +167,7 @@
   "regTemp": {
     "action": "setting",
     "type": "scalar",
-    "value": 25,
+    "value": 50,
     "unit": "C",
     "alarm": {
       "value": 0,
@@ -247,7 +267,7 @@
   "avgDutyFactor": {
     "action": "reading",
     "type": "scalar",
-    "value": 0,
+    "value": 2.5,
     "unit": "%",
     "alarm": {
       "value": 0,
