@@ -1,13 +1,13 @@
 {
   "deviceType": "blinky-ssr-bake",
-  "name": "01",
+  "name": "02",
   "arcPeriod": 60000,
   "timeStamp": 1610962831200,
   "lastArchive": 1610962777220,
   "linkQuality": {
     "action": "reading",
     "type": "scalar",
-    "value": 66,
+    "value": 63,
     "unit": "/70",
     "alarm": {
       "value": 0,
@@ -27,7 +27,7 @@
   "signalLevel": {
     "action": "reading",
     "type": "scalar",
-    "value": -44,
+    "value": -47,
     "unit": "dBm",
     "alarm": {
       "value": 0,
@@ -67,7 +67,7 @@
   "dutyFactor": {
     "action": "reading",
     "type": "scalar",
-    "value": 3.3,
+    "value": 50,
     "unit": "%",
     "alarm": {
       "value": 0,
@@ -87,7 +87,7 @@
   "rampTemp": {
     "action": "reading",
     "type": "scalar",
-    "value": 27.98,
+    "value": 23.3,
     "unit": "C",
     "alarm": {
       "value": 0,
@@ -107,7 +107,7 @@
   "rampError": {
     "action": "reading",
     "type": "scalar",
-    "value": -0.53,
+    "value": 0,
     "unit": "C",
     "alarm": {
       "value": 0,
@@ -127,7 +127,7 @@
   "temperature": {
     "action": "reading",
     "type": "scalar",
-    "value": 27.52,
+    "value": 23.29,
     "unit": "C",
     "alarm": {
       "value": 0,
@@ -187,7 +187,7 @@
   "regState": {
     "action": "setting",
     "type": "scalar",
-    "value": 0,
+    "value": 2,
     "unit": "unit",
     "alarm": {
       "value": 0,
@@ -267,7 +267,7 @@
   "avgDutyFactor": {
     "action": "reading",
     "type": "scalar",
-    "value": 2.5,
+    "value": 50,
     "unit": "%",
     "alarm": {
       "value": 0,
