@@ -1,6 +1,6 @@
 {
   "deviceType": "blinky-ssr-bake",
-  "name": "02",
+  "name": "03",
   "arcPeriod": 60000,
   "timeStamp": 1610962831200,
   "lastArchive": 1610962777220,
@@ -187,7 +187,7 @@
   "regState": {
     "action": "setting",
     "type": "scalar",
-    "value": 2,
+    "value": 0,
     "unit": "unit",
     "alarm": {
       "value": 0,
