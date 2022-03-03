@@ -1,21 +1,20 @@
 {
-  "deviceType": "blinky-ssr-bake",
+  "type": "blinky-ssr-bake",
   "name": "01",
   "arcPeriod": 60000,
-  "timeStamp": 1635241607444,
-  "lastArchive": 1635241592408,
+  "timeStamp": 1646314543726,
   "linkQuality": {
     "action": "reading",
     "type": "scalar",
-    "value": 70,
+    "value": 68,
     "unit": "/70",
     "alarm": {
       "value": 0,
       "limits": {
-        "lolo": 30,
-        "low": 40,
-        "high": 71,
-        "hihi": 80
+        "lolo": -1,
+        "low": -1,
+        "high": 100,
+        "hihi": 100
       },
       "notify": {
         "name": "",
@@ -27,35 +26,15 @@
   "signalLevel": {
     "action": "reading",
     "type": "scalar",
-    "value": -37,
+    "value": -42,
     "unit": "dBm",
     "alarm": {
       "value": 0,
       "limits": {
-        "lolo": -70,
-        "low": -60,
-        "high": 0,
+        "lolo": -100,
+        "low": -100,
+        "high": 30,
         "hihi": 30
-      },
-      "notify": {
-        "name": "",
-        "number": "",
-        "time": 0
-      }
-    }
-  },
-  "reset": {
-    "action": "setting",
-    "type": "scalar",
-    "value": 0,
-    "unit": "unit",
-    "alarm": {
-      "value": 0,
-      "limits": {
-        "lolo": -1,
-        "low": -1,
-        "high": 2,
-        "hihi": 2
       },
       "notify": {
         "name": "",
@@ -67,7 +46,7 @@
   "dutyFactor": {
     "action": "reading",
     "type": "scalar",
-    "value": 4.4,
+    "value": 3.7,
     "unit": "%",
     "alarm": {
       "value": 0,
@@ -85,9 +64,9 @@
     }
   },
   "rampTemp": {
-    "action": "reading",
+    "action": "setting",
     "type": "scalar",
-    "value": 28.584561111111533,
+    "value": 27.4,
     "unit": "C",
     "alarm": {
       "value": 0,
@@ -107,7 +86,7 @@
   "temperature": {
     "action": "reading",
     "type": "scalar",
-    "value": 28.15,
+    "value": 26.8,
     "unit": "C",
     "alarm": {
       "value": 0,
@@ -144,30 +123,10 @@
       }
     }
   },
-  "regTemp": {
-    "action": "setting",
-    "type": "scalar",
-    "value": 50,
-    "unit": "C",
-    "alarm": {
-      "value": 0,
-      "limits": {
-        "lolo": 15,
-        "low": 19,
-        "high": 205,
-        "hihi": 225
-      },
-      "notify": {
-        "name": "",
-        "number": "",
-        "time": 0
-      }
-    }
-  },
   "regState": {
     "action": "setting",
     "type": "scalar",
-    "value": 0,
+    "value": 1,
     "unit": "unit",
     "alarm": {
       "value": 0,
@@ -232,10 +191,10 @@
     "alarm": {
       "value": 0,
       "limits": {
-        "lolo": 1,
-        "low": 1,
-        "high": 10000,
-        "hihi": 10001
+        "lolo": 0,
+        "low": 0,
+        "high": 10,
+        "hihi": 10
       },
       "notify": {
         "name": "",
@@ -247,7 +206,7 @@
   "avgDutyFactor": {
     "action": "reading",
     "type": "scalar",
-    "value": 3.7,
+    "value": 2.9,
     "unit": "%",
     "alarm": {
       "value": 0,
@@ -267,7 +226,7 @@
   "dutyFactorSet": {
     "action": "setting",
     "type": "scalar",
-    "value": 10,
+    "value": 5,
     "unit": "%",
     "alarm": {
       "value": 0,
@@ -307,7 +266,7 @@
   "rampError": {
     "action": "reading",
     "type": "scalar",
-    "value": -0.38,
+    "value": -0.56,
     "unit": "C",
     "alarm": {
       "value": 0,
@@ -387,7 +346,7 @@
   "ramp1Time": {
     "action": "setting",
     "type": "scalar",
-    "value": 0.3,
+    "value": 0.31,
     "unit": "hours",
     "alarm": {
       "value": 0,
