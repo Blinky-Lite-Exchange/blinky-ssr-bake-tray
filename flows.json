@@ -87,24 +87,25 @@
         "h": 97
     },
     {
-        "id": "7b24d2ffb7b31b5b",
+        "id": "4a9fae8c3ee0d5c7",
         "type": "group",
         "z": "85e21fcb925ef32f",
-        "name": "Custom tray Code",
+        "name": "Custom Code",
         "style": {
             "stroke": "#000000",
-            "fill": "#ffff00",
+            "fill": "#ffff7f",
             "label": true,
             "label-position": "n",
             "color": "#000000"
         },
         "nodes": [
             "465fe954.881be8",
-            "b2b4e2b1a8d11dd6"
+            "b2b4e2b1a8d11dd6",
+            "47542af8a13f9fa3"
         ],
         "x": 894,
         "y": 739,
-        "w": 332,
+        "w": 512,
         "h": 82
     },
     {
@@ -1051,7 +1052,7 @@
         "links": [
             "5aebb0b38ba2e191"
         ],
-        "x": 1235,
+        "x": 1245,
         "y": 680,
         "wires": []
     },
@@ -2152,7 +2153,7 @@
         "id": "465fe954.881be8",
         "type": "function",
         "z": "85e21fcb925ef32f",
-        "g": "7b24d2ffb7b31b5b",
+        "g": "4a9fae8c3ee0d5c7",
         "name": "State Machine",
         "func": "var tray = global.get('tray');\nvar now = new Date().getTime();\nvar lastTime = context.get('lastTime');\nvar oldRegState = context.get('oldRegState');\ncontext.set('lastTime',now);\nvar deltaT = now - lastTime;\nvar settingMsg = [];\nif (tray.regState.value == 0)\n{\n    tray.rampError.value = 0.0;\n    tray.rampTemp.value = tray.temperature.value;\n    tray.rampSegment.value = 0;\n    context.set('rampDirection',0);\n    context.set('rampTemp', tray.rampTemp.value);\n    \n    if (oldRegState != tray.regState.value)\n    {\n        settingMsg.push({address:1,value:tray.regState.value});\n        context.set('oldRegState',tray.regState.value);\n        settingMsg.push({address:3, value:Math.round(tray.rampTemp.value * 10)});\n        return {topic:'setting',payload:settingMsg};\n    }\n    return null;\n}\nif (tray.regState.value == 2)\n{\n    tray.rampError.value = 0.0;\n    if (tray.temperature.value < tray.temperature.alarm.limits.lolo) tray.regState.value = 0;\n    if (tray.temperature.value > tray.temperature.alarm.limits.hihi) tray.regState.value = 0;\n    tray.rampTemp.value = tray.temperature.value;\n    tray.rampSegment.value = 0;\n    context.set('rampDirection',0);\n    context.set('rampTemp', tray.rampTemp.value);\n\n    if (oldRegState != tray.regState.value)\n    {\n        settingMsg.push({address:1,value:tray.regState.value});\n        context.set('oldRegState',tray.regState.value);\n        settingMsg.push({address:3, value:Math.round(tray.rampTemp.value * 10)});\n        return {topic:'setting',payload:settingMsg};\n    }\n    return null;\n}\nvar rampDirection = context.get('rampDirection');\nvar rampTemp = context.get('rampTemp');\n\nswitch(tray.rampSegment.value)\n{\n    case 0 :\n        rampDirection = Math.round(tray.ramp1Temp.value - tray.temperature.value);\n        context.set('startTemp', 22.0);\n        if (rampDirection >  1.0 ) rampDirection =  1.0;\n        if (rampDirection < -1.0 ) rampDirection = -1.0;\n        context.set('rampDirection',rampDirection);\n        tray.rampTemp.value = tray.temperature.value;\n        context.set('rampTemp', tray.rampTemp.value);\n        tray.rampSegment.value = 1;\n        break;\n    case 1  :\n        if (tray.ramp1Rate.value < 0.0) tray.ramp1Rate.value = -tray.ramp1Rate.value;\n        rampTemp = rampTemp + rampDirection * tray.ramp1Rate.value * deltaT / 3600000.0;\n        if (rampDirection > 0.0)\n        {\n            if (rampTemp > tray.ramp1Temp.value)\n            {\n                rampTemp = tray.ramp1Temp.value;\n                context.set('flatTopStart',now);\n                tray.rampSegment.value = 2;\n            }\n        }\n        else\n        {\n            if (rampTemp < tray.ramp1Temp.value)\n            {\n                rampTemp = tray.ramp1Temp.value;\n                context.set('flatTopStart',now);\n                tray.rampSegment.value = 2;\n            }\n        }\n        break;\n    case 2 :\n        rampTemp = tray.ramp1Temp.value;\n        if ((now - context.get('flatTopStart')) > Math.round(tray.ramp1Time.value * 3600000))\n        {\n            rampDirection = Math.round(tray.ramp2Temp.value - tray.ramp1Temp.value);\n            if (rampDirection >  1.0 ) rampDirection =  1.0;\n            if (rampDirection < -1.0 ) rampDirection = -1.0;\n            context.set('rampDirection',rampDirection);\n            tray.rampSegment.value = 3;\n        }\n        break;\n    case 3  :\n        if (tray.ramp2Rate.value < 0.0) tray.ramp2Rate.value = -tray.ramp2Rate.value;\n        rampTemp = rampTemp + rampDirection * tray.ramp2Rate.value * deltaT / 3600000.0;\n        if (rampDirection > 0.0)\n        {\n            if (rampTemp > tray.ramp2Temp.value)\n            {\n                rampTemp = tray.ramp2Temp.value;\n                context.set('flatTopStart',now);\n                tray.rampSegment.value = 4;\n            }\n        }\n        else\n        {\n            if (rampTemp < tray.ramp2Temp.value)\n            {\n                rampTemp = tray.ramp2Temp.value;\n                context.set('flatTopStart',now);\n                tray.rampSegment.value = 4;\n            }\n        }\n        break;\n    case 4 :\n        rampTemp = tray.ramp2Temp.value;\n        if ((now - context.get('flatTopStart')) > Math.round(tray.ramp2Time.value * 3600000))\n        {\n            rampDirection = Math.round(tray.ramp3Temp.value - tray.ramp2Temp.value);\n            if (rampDirection >  1.0 ) rampDirection =  1.0;\n            if (rampDirection < -1.0 ) rampDirection = -1.0;\n            context.set('rampDirection',rampDirection);\n            tray.rampSegment.value = 5;\n        }\n        break;\n    case 5  :\n        if (tray.ramp3Rate.value < 0.0) tray.ramp3Rate.value = -tray.ramp3Rate.value;\n        rampTemp = rampTemp + rampDirection * tray.ramp3Rate.value * deltaT / 3600000.0;\n        if (rampDirection > 0.0)\n        {\n            if (rampTemp > tray.ramp3Temp.value)\n            {\n                rampTemp = tray.ramp3Temp.value;\n                context.set('flatTopStart',now);\n                tray.rampSegment.value = 6;\n            }\n        }\n        else\n        {\n            if (rampTemp < tray.ramp3Temp.value)\n            {\n                rampTemp = tray.ramp3Temp.value;\n                context.set('flatTopStart',now);\n                tray.rampSegment.value = 6;\n            }\n        }\n        break;\n    case 6 :\n        rampTemp = tray.ramp3Temp.value;\n        if ((now - context.get('flatTopStart')) > Math.round(tray.ramp3Time.value * 3600000))\n        {\n            rampDirection = Math.round(context.get('startTemp') - tray.ramp3Temp.value);\n            if (rampDirection >  1.0 ) rampDirection =  1.0;\n            if (rampDirection < -1.0 ) rampDirection = -1.0;\n            context.set('rampDirection',rampDirection);\n            tray.rampSegment.value = 7;\n        }\n        break;\n    case 7  :\n        if (tray.ramp3Rate.value < 0.0) tray.ramp3Rate.value = -tray.ramp3Rate.value;\n        rampTemp = tray.rampTemp.value + rampDirection * tray.ramp3Rate.value * deltaT / 3600000.0;\n        if (rampDirection > 0.0)\n        {\n            if (rampTemp > context.get('startTemp'))\n            {\n                rampTemp = context.get('startTemp');\n                context.set('flatTopStart',now);\n                tray.rampSegment.value = 8;\n            }\n        }\n        else\n        {\n            if (rampTemp < context.get('startTemp'))\n            {\n                rampTemp = context.get('startTemp');\n                context.set('flatTopStart',now);\n                tray.rampSegment.value = 8;\n            }\n        }\n        break;\n    case 8 :\n        rampTemp = context.get('startTemp');\n        break;\n}\ntray.rampTemp.value = rampTemp;\ncontext.set('rampTemp', tray.rampTemp.value);\n\ntray.rampError.value = 0.0;\nif (tray.temperature.value < tray.temperature.alarm.limits.lolo) tray.regState.value = 0;\nif (tray.temperature.value > tray.temperature.alarm.limits.hihi) tray.regState.value = 0;\nif (tray.regState.value == 1)\n{\n    tray.rampError.value = Math.round((tray.temperature.value - tray.rampTemp.value) * 100) / 100;\n    if (tray.rampError.value < tray.rampError.alarm.limits.lolo) tray.regState.value = 0;\n    if (tray.rampError.value > tray.rampError.alarm.limits.hihi) tray.regState.value = 0;\n}\n\nif (oldRegState != tray.regState.value)\n{\n    settingMsg.push({address:1,value:tray.regState.value});\n    context.set('oldRegState',tray.regState.value);\n}\nsettingMsg.push({address:3, value:Math.round(tray.rampTemp.value * 10)});\nreturn {topic:'setting',payload:settingMsg};\n",
         "outputs": 1,
@@ -2172,7 +2173,7 @@
         "id": "b2b4e2b1a8d11dd6",
         "type": "split",
         "z": "85e21fcb925ef32f",
-        "g": "7b24d2ffb7b31b5b",
+        "g": "4a9fae8c3ee0d5c7",
         "name": "",
         "splt": "\\n",
         "spltType": "str",
@@ -2205,6 +2206,7 @@
         "id": "47542af8a13f9fa3",
         "type": "delay",
         "z": "85e21fcb925ef32f",
+        "g": "4a9fae8c3ee0d5c7",
         "name": "",
         "pauseType": "rate",
         "timeout": "5",
