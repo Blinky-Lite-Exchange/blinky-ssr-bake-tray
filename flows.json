@@ -7,26 +7,6 @@
         "info": ""
     },
     {
-        "id": "6785b9f659322af5",
-        "type": "group",
-        "z": "85e21fcb925ef32f",
-        "name": "Edit Me",
-        "style": {
-            "fill": "#9363b7",
-            "label": true,
-            "label-position": "n",
-            "color": "#ffff00",
-            "stroke": "#001f60"
-        },
-        "nodes": [
-            "e02713f3ebea0b0d"
-        ],
-        "x": 634,
-        "y": 299,
-        "w": 212,
-        "h": 82
-    },
-    {
         "id": "40e56362c23599cc",
         "type": "group",
         "z": "85e21fcb925ef32f",
@@ -61,7 +41,7 @@
         "nodes": [
             "352395cfbb5c4259"
         ],
-        "x": 574,
+        "x": 534,
         "y": 599,
         "w": 232,
         "h": 82
@@ -103,8 +83,8 @@
             "b2b4e2b1a8d11dd6",
             "47542af8a13f9fa3"
         ],
-        "x": 894,
-        "y": 739,
+        "x": 934,
+        "y": 719,
         "w": 512,
         "h": 82
     },
@@ -273,7 +253,7 @@
         "rap": false,
         "inputs": 0,
         "x": 130,
-        "y": 160,
+        "y": 200,
         "wires": [
             [
                 "f812bb6a.1aec68"
@@ -373,7 +353,7 @@
         "createDir": false,
         "overwriteFile": "true",
         "encoding": "none",
-        "x": 1270,
+        "x": 1290,
         "y": 420,
         "wires": [
             []
@@ -390,7 +370,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1080,
+        "x": 1100,
         "y": 420,
         "wires": [
             [
@@ -407,7 +387,7 @@
         "action": "obj",
         "pretty": false,
         "x": 310,
-        "y": 160,
+        "y": 200,
         "wires": [
             [
                 "e0d2b8e49c2e469b"
@@ -427,7 +407,7 @@
         "oldrc": false,
         "name": "Restart",
         "x": 700,
-        "y": 1460,
+        "y": 1240,
         "wires": [
             [],
             [],
@@ -457,7 +437,7 @@
         "repair": false,
         "outputs": 2,
         "x": 310,
-        "y": 1540,
+        "y": 1260,
         "wires": [
             [
                 "985cd59b3e414efe"
@@ -479,7 +459,7 @@
         "oldrc": false,
         "name": "Reboot",
         "x": 500,
-        "y": 1580,
+        "y": 1300,
         "wires": [
             [],
             [],
@@ -504,7 +484,7 @@
         "allowrate": false,
         "outputs": 1,
         "x": 160,
-        "y": 1540,
+        "y": 1260,
         "wires": [
             [
                 "9e290594.69c548"
@@ -525,8 +505,8 @@
         "correl": "",
         "expiry": "",
         "broker": "79250bf3.365cc4",
-        "x": 1390,
-        "y": 220,
+        "x": 1250,
+        "y": 340,
         "wires": []
     },
     {
@@ -534,17 +514,20 @@
         "type": "function",
         "z": "85e21fcb925ef32f",
         "name": "Readings Alarm Scan",
-        "func": "var newData = msg.payload;\nvar tray = global.get('tray');\ntray.linkQuality.value     = global.get('linkQuality');\ntray.signalLevel.value     = global.get('signalLevel');\nvar alarmFlagReading = scalarAlarmScan(tray, 'reading');\nvar alarmFlagSetting = scalarAlarmScan(tray, 'setting');\nvar newMsg   = null;\nvar alarmMsg = null;\nif (alarmFlagReading || alarmFlagSetting)\n{\n    alarmMsg = \n    {\n        topic: 'alarm',\n        payload: true\n    }\n}\nif (newData)\n{\n    newMsg = \n    {\n        topic: 'newData',\n        payload: true\n    }\n}\nif (alarmMsg != null ) newMsg = null;\nreturn [newMsg, alarmMsg];\n\nfunction getActionArray(tray, type, actionType)\n{\n    var actionArray = [];\n    var keys = Object.keys(tray);\n    for (var ii = 0; ii < keys.length; ++ii)\n    {\n        if (tray[keys[ii]].hasOwnProperty('type'))\n        {\n            if (tray[keys[ii]].type == type)\n            {\n                if (tray[keys[ii]].action == actionType)\n                {\n                    actionArray.push(tray[keys[ii]]);\n                }\n            }\n        }\n    }\n    return actionArray;\n}\nfunction scalarAlarmScan(tray, actionType)\n{\n    var alarmFlag = false;\n    var actionArray = getActionArray(tray, 'scalar', actionType);\n    if (actionArray.length > 0)\n    {\n        for (var ii = 0; ii < actionArray.length; ++ii)\n        {\n            let oldAlarmValue = actionArray[ii].alarm.value;\n            actionArray[ii].alarm.value = 0;\n            if (!isNaN(actionArray[ii].value))\n            {\n                if (actionArray[ii].value <= actionArray[ii].alarm.limits.low)  actionArray[ii].alarm.value = 1;\n                if (actionArray[ii].value <= actionArray[ii].alarm.limits.lolo) actionArray[ii].alarm.value = 3;\n                if (actionArray[ii].value >= actionArray[ii].alarm.limits.high) actionArray[ii].alarm.value = 2;\n                if (actionArray[ii].value >= actionArray[ii].alarm.limits.hihi) actionArray[ii].alarm.value = 4;\n                if (actionArray[ii].alarm.value != oldAlarmValue) alarmFlag = true;\n            }\n        }\n    }\n    return alarmFlag;\n}\n",
-        "outputs": 2,
+        "func": "var newData = msg.payload;\nvar tray = global.get('tray');\ntray.linkQuality.value     = global.get('linkQuality');\ntray.signalLevel.value     = global.get('signalLevel');\nvar alarmFlagReading = scalarAlarmScan(tray, 'reading');\nvar alarmFlagSetting = scalarAlarmScan(tray, 'setting');\nvar newMsg   = null;\nvar alarmMsg = null;\nvar newSettingMsg = null;\nif (alarmFlagReading || alarmFlagSetting)\n{\n    alarmMsg = \n    {\n        topic: 'alarm',\n        payload: true\n    }\n}\nif (msg.topic == 'newSetting')\n{\n    newSettingMsg = \n    {\n        topic: 'newSetting',\n        payload: true\n    }\n};\nif (newData)\n{\n    newMsg = \n    {\n        topic: 'newData',\n        payload: true\n    }\n}\nif (alarmMsg != null ) newMsg = null;\nreturn [newMsg, newSettingMsg, alarmMsg];\n\nfunction getActionArray(tray, type, actionType)\n{\n    var actionArray = [];\n    var keys = Object.keys(tray);\n    for (var ii = 0; ii < keys.length; ++ii)\n    {\n        if (tray[keys[ii]].hasOwnProperty('type'))\n        {\n            if (tray[keys[ii]].type == type)\n            {\n                if (tray[keys[ii]].action == actionType)\n                {\n                    actionArray.push(tray[keys[ii]]);\n                }\n            }\n        }\n    }\n    return actionArray;\n}\nfunction scalarAlarmScan(tray, actionType)\n{\n    var alarmFlag = false;\n    var actionArray = getActionArray(tray, 'scalar', actionType);\n    if (actionArray.length > 0)\n    {\n        for (var ii = 0; ii < actionArray.length; ++ii)\n        {\n            let oldAlarmValue = actionArray[ii].alarm.value;\n            actionArray[ii].alarm.value = 0;\n            if (!isNaN(actionArray[ii].value))\n            {\n                if (actionArray[ii].value <= actionArray[ii].alarm.limits.low)  actionArray[ii].alarm.value = 1;\n                if (actionArray[ii].value <= actionArray[ii].alarm.limits.lolo) actionArray[ii].alarm.value = 3;\n                if (actionArray[ii].value >= actionArray[ii].alarm.limits.high) actionArray[ii].alarm.value = 2;\n                if (actionArray[ii].value >= actionArray[ii].alarm.limits.hihi) actionArray[ii].alarm.value = 4;\n                if (actionArray[ii].alarm.value != oldAlarmValue) alarmFlag = true;\n            }\n        }\n    }\n    return alarmFlag;\n}\n",
+        "outputs": 3,
         "noerr": 0,
         "initialize": "// Code added here will be run once\n// whenever the node is started.\ncontext.set('lastAlarm', -1);",
         "finalize": "",
         "libs": [],
-        "x": 980,
-        "y": 600,
+        "x": 900,
+        "y": 640,
         "wires": [
             [
                 "f5d0568e288098ed"
+            ],
+            [
+                "9f8c3b4630e734a3"
             ],
             [
                 "e490045da57dbc44"
@@ -641,7 +624,7 @@
         "repair": false,
         "outputs": 4,
         "x": 650,
-        "y": 160,
+        "y": 200,
         "wires": [
             [
                 "4493527757138cdc"
@@ -669,7 +652,7 @@
         "finalize": "",
         "libs": [],
         "x": 470,
-        "y": 160,
+        "y": 200,
         "wires": [
             [
                 "f9be9054ce456982"
@@ -706,8 +689,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1030,
-        "y": 220,
+        "x": 1070,
+        "y": 340,
         "wires": [
             [
                 "5152879001ec63ea"
@@ -732,8 +715,8 @@
             "3fc0261f194a7067",
             "396e4a58f43bbdef"
         ],
-        "x": 915,
-        "y": 220,
+        "x": 955,
+        "y": 340,
         "wires": [
             [
                 "f75b9887786b11c4"
@@ -749,8 +732,8 @@
             "45a97566b65c65cc",
             "05c0c7b4f59ca88d"
         ],
-        "x": 1155,
-        "y": 560,
+        "x": 1055,
+        "y": 600,
         "wires": []
     },
     {
@@ -891,31 +874,19 @@
         ]
     },
     {
-        "id": "6af21e76e0c4ad80",
-        "type": "link out",
-        "z": "85e21fcb925ef32f",
-        "name": "Check blinkybus Setting out",
-        "mode": "link",
-        "links": [
-            "45a97566b65c65cc"
-        ],
-        "x": 875,
-        "y": 340,
-        "wires": []
-    },
-    {
         "id": "04d132d87ffeb91a",
         "type": "link in",
         "z": "85e21fcb925ef32f",
         "name": "Save Settings to file in",
         "links": [
+            "6af21e76e0c4ad80",
             "501090a1fd5f88f5",
             "1e34df4b19ff22cc",
             "75aab98047eea696",
             "344a2a68c26672b2",
-            "93758a55568a2f76"
+            "9f8c3b4630e734a3"
         ],
-        "x": 935,
+        "x": 955,
         "y": 420,
         "wires": [
             [
@@ -1004,7 +975,7 @@
             "72b5ca0e2043aba0"
         ],
         "x": 55,
-        "y": 1540,
+        "y": 1260,
         "wires": [
             [
                 "557e4f40.b904e"
@@ -1052,28 +1023,9 @@
         "links": [
             "5aebb0b38ba2e191"
         ],
-        "x": 1245,
-        "y": 680,
+        "x": 855,
+        "y": 1020,
         "wires": []
-    },
-    {
-        "id": "9ecac5e72feeaa9c",
-        "type": "function",
-        "z": "85e21fcb925ef32f",
-        "name": "Set device Init flag",
-        "func": "global.set('deviceInit', 2);\nreturn {topic: 'initDevice', payload:true};",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1110,
-        "y": 680,
-        "wires": [
-            [
-                "961b85c2472cee35"
-            ]
-        ]
     },
     {
         "id": "5aebb0b38ba2e191",
@@ -1150,73 +1102,7 @@
         "y": 960,
         "wires": [
             [
-                "1f4c751fdd689750"
-            ]
-        ]
-    },
-    {
-        "id": "1f4c751fdd689750",
-        "type": "serial request",
-        "z": "85e21fcb925ef32f",
-        "name": "Blinky-Bus",
-        "serial": "a4f4c59daf894823",
-        "x": 350,
-        "y": 1000,
-        "wires": [
-            [
-                "6b066f99a43ec0aa"
-            ]
-        ]
-    },
-    {
-        "id": "91198f280faf6f80",
-        "type": "function",
-        "z": "85e21fcb925ef32f",
-        "name": "Check Setting",
-        "func": "var dataView     = new DataView(new ArrayBuffer(2));\nfor (ib = 0; ib < 2; ++ib)   dataView.setUint8(ib, msg.payload[msg.address * 2 + 1 - ib]);\nvar setting = dataView.getInt16(0);\nreturn {topic:msg.topic,payload:{address:msg.address,value:setting}};",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 640,
-        "y": 960,
-        "wires": [
-            [
-                "2f397c492e8931b9"
-            ]
-        ]
-    },
-    {
-        "id": "6b066f99a43ec0aa",
-        "type": "switch",
-        "z": "85e21fcb925ef32f",
-        "name": "",
-        "property": "topic",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "setting",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "reading",
-                "vt": "str"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 2,
-        "x": 490,
-        "y": 1000,
-        "wires": [
-            [
-                "91198f280faf6f80"
-            ],
-            [
-                "1fc86ac13df1a13f"
+                "3026811a11de85fd"
             ]
         ]
     },
@@ -1235,7 +1121,7 @@
         "y": 1040,
         "wires": [
             [
-                "1f4c751fdd689750"
+                "3026811a11de85fd"
             ]
         ]
     },
@@ -1244,17 +1130,20 @@
         "type": "function",
         "z": "85e21fcb925ef32f",
         "name": "Check Reading",
-        "func": "var serialBufSize = global.get('serialBufSize');\nvar dataView     = new DataView(new ArrayBuffer(2));\nvar dataBuffer = [];\nfor (var ii = 0; ii < (msg.payload.length / 2); ++ii)\n{\n    for (ib = 0; ib < 2; ++ib)   dataView.setUint8(ib, msg.payload[(ii * 2) + 1 - ib]);\n    dataBuffer.push( dataView.getInt16(0));\n}\nreturn {topic:msg.topic,payload:dataBuffer, timeStamp:msg.timeStamp};",
-        "outputs": 1,
+        "func": "var serialBufSize = global.get('serialBufSize');\nvar dataView     = new DataView(new ArrayBuffer(2));\nvar dataBuffer = [];\nfor (var ii = 0; ii < (msg.payload.length / 2); ++ii)\n{\n    for (ib = 0; ib < 2; ++ib)   dataView.setUint8(ib, msg.payload[(ii * 2) + 1 - ib]);\n    dataBuffer.push( dataView.getInt16(0));\n}\nvar topic = 'newReading';\nif (global.get('settingInProgress'))\n{\n    topic = 'newSetting';\n    if (global.get('deviceInit') < 1);\n        global.set('settingInProgress', false)\n}\nglobal.get('tray').timeStamp = new Date().getTime();\nif (dataBuffer[0] == 1)\n{\n    var initDeviceMsg = {topic:\"initDevice\",payload:true};\n    global.set('settingInProgress', true)\n    global.set('deviceInit', 2);\n    return [null, initDeviceMsg];\n}\nreturn [{topic:topic, payload:dataBuffer},null];\n\n\n\n",
+        "outputs": 2,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 640,
-        "y": 1040,
+        "x": 700,
+        "y": 1000,
         "wires": [
             [
                 "ed6ec66d5cb48297"
+            ],
+            [
+                "961b85c2472cee35"
             ]
         ]
     },
@@ -1295,21 +1184,6 @@
         ]
     },
     {
-        "id": "2f397c492e8931b9",
-        "type": "link out",
-        "z": "85e21fcb925ef32f",
-        "name": "BlinkyBus Setting Out",
-        "mode": "link",
-        "links": [
-            "51ab68bf6ce7ba49",
-            "4e7f69ba08b375d1",
-            "e6880b0c36ae9c73"
-        ],
-        "x": 755,
-        "y": 960,
-        "wires": []
-    },
-    {
         "id": "ed6ec66d5cb48297",
         "type": "link out",
         "z": "85e21fcb925ef32f",
@@ -1319,8 +1193,8 @@
             "a3d99d9c796d9231",
             "edafb769c9979256"
         ],
-        "x": 755,
-        "y": 1040,
+        "x": 855,
+        "y": 980,
         "wires": []
     },
     {
@@ -1335,20 +1209,6 @@
         "x": 1835,
         "y": 60,
         "wires": []
-    },
-    {
-        "id": "4e7f69ba08b375d1",
-        "type": "link in",
-        "z": "85e21fcb925ef32f",
-        "name": "Init device setting out",
-        "links": [
-            "2f397c492e8931b9"
-        ],
-        "x": 1915,
-        "y": 60,
-        "wires": [
-            []
-        ]
     },
     {
         "id": "b7fd8744c033e8b3",
@@ -1386,176 +1246,11 @@
         "name": "Tray Setting In",
         "mode": "link",
         "links": [
-            "04d132d87ffeb91a",
             "b0f91914917b2de1"
         ],
         "x": 515,
         "y": 340,
         "wires": []
-    },
-    {
-        "id": "e6880b0c36ae9c73",
-        "type": "link in",
-        "z": "85e21fcb925ef32f",
-        "name": "Tray Setting Out",
-        "links": [
-            "2f397c492e8931b9"
-        ],
-        "x": 595,
-        "y": 340,
-        "wires": [
-            [
-                "e02713f3ebea0b0d"
-            ]
-        ]
-    },
-    {
-        "id": "85aad4c007777379",
-        "type": "status",
-        "z": "85e21fcb925ef32f",
-        "name": "",
-        "scope": [
-            "1f4c751fdd689750"
-        ],
-        "x": 100,
-        "y": 1300,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "0c13823324600aa5",
-        "type": "switch",
-        "z": "85e21fcb925ef32f",
-        "name": "",
-        "property": "status.fill",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "red",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "green",
-                "vt": "str"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 2,
-        "x": 260,
-        "y": 1300,
-        "wires": [
-            [
-                "de0d4dd3607e9ecd"
-            ],
-            [
-                "53ef6223ba1ca248"
-            ]
-        ]
-    },
-    {
-        "id": "de0d4dd3607e9ecd",
-        "type": "function",
-        "z": "85e21fcb925ef32f",
-        "name": "Serial Not Connected",
-        "func": "global.get('settingInProgress',true);\nglobal.set('serialState', 0);\nreturn msg;",
-        "outputs": 0,
-        "noerr": 0,
-        "initialize": "// Code added here will be run once\n// whenever the node is started.\nglobal.set('serialState', 0);\n",
-        "finalize": "",
-        "libs": [],
-        "x": 440,
-        "y": 1260,
-        "wires": []
-    },
-    {
-        "id": "f342efc46c6d2fd7",
-        "type": "function",
-        "z": "85e21fcb925ef32f",
-        "name": "Reset Setting in Progress",
-        "func": "if (global.get('settingInProgress')) \n{\n    if (global.get('serialState') == 1) global.set('settingInProgress',false);\n    return msg;\n}\nelse\n{\n    return null;\n}\nreturn null;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 810,
-        "y": 1340,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "53ef6223ba1ca248",
-        "type": "function",
-        "z": "85e21fcb925ef32f",
-        "name": "Serial Connected",
-        "func": "if (global.get('tray') == undefined) return null;\nglobal.set('serialState', 1);\nif (!global.get('settingInProgress')) return null\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 430,
-        "y": 1340,
-        "wires": [
-            [
-                "dfea2fb0eebb8e26"
-            ]
-        ]
-    },
-    {
-        "id": "dfea2fb0eebb8e26",
-        "type": "delay",
-        "z": "85e21fcb925ef32f",
-        "name": "",
-        "pauseType": "delay",
-        "timeout": "7",
-        "timeoutUnits": "seconds",
-        "rate": "1",
-        "nbRateUnits": "1",
-        "rateUnits": "second",
-        "randomFirst": "1",
-        "randomLast": "5",
-        "randomUnits": "seconds",
-        "drop": false,
-        "allowrate": false,
-        "outputs": 1,
-        "x": 610,
-        "y": 1340,
-        "wires": [
-            [
-                "f342efc46c6d2fd7"
-            ]
-        ]
-    },
-    {
-        "id": "74c6d394f2452a62",
-        "type": "delay",
-        "z": "85e21fcb925ef32f",
-        "name": "",
-        "pauseType": "delay",
-        "timeout": "3",
-        "timeoutUnits": "seconds",
-        "rate": "1",
-        "nbRateUnits": "1",
-        "rateUnits": "second",
-        "randomFirst": "1",
-        "randomLast": "5",
-        "randomUnits": "seconds",
-        "drop": false,
-        "allowrate": false,
-        "outputs": 1,
-        "x": 940,
-        "y": 680,
-        "wires": [
-            [
-                "9ecac5e72feeaa9c"
-            ]
-        ]
     },
     {
         "id": "ebb5481bd4277b24",
@@ -1581,39 +1276,6 @@
                 "930b94f38479787c"
             ]
         ]
-    },
-    {
-        "id": "4ce34923f9f085d5",
-        "type": "catch",
-        "z": "85e21fcb925ef32f",
-        "name": "",
-        "scope": [
-            "91198f280faf6f80",
-            "1fc86ac13df1a13f",
-            "1f4c751fdd689750"
-        ],
-        "uncaught": false,
-        "x": 90,
-        "y": 1240,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "fa6e40279b96ba81",
-        "type": "debug",
-        "z": "85e21fcb925ef32f",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 2070,
-        "y": 60,
-        "wires": []
     },
     {
         "id": "742713de179bd6ce",
@@ -1714,7 +1376,7 @@
         "finalize": "",
         "libs": [],
         "x": 520,
-        "y": 1460,
+        "y": 1240,
         "wires": [
             [
                 "c0939e4a.6386f"
@@ -1790,7 +1452,7 @@
         "payload": "PROJECT",
         "payloadType": "env",
         "x": 100,
-        "y": 1680,
+        "y": 1400,
         "wires": [
             [
                 "df7945d1e609440c"
@@ -1809,7 +1471,7 @@
         "finalize": "",
         "libs": [],
         "x": 290,
-        "y": 1680,
+        "y": 1400,
         "wires": []
     },
     {
@@ -1824,7 +1486,7 @@
         "oldrc": false,
         "name": "",
         "x": 720,
-        "y": 1680,
+        "y": 1400,
         "wires": [
             [
                 "b6b5acfa59ca717b"
@@ -1846,7 +1508,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 560,
-        "y": 1680,
+        "y": 1400,
         "wires": [
             [
                 "0ad39c241b705258"
@@ -1864,7 +1526,7 @@
         "initialize": "",
         "finalize": "",
         "x": 900,
-        "y": 1680,
+        "y": 1400,
         "wires": [
             []
         ]
@@ -1930,16 +1592,6 @@
                 "2cd296fd87868cea"
             ]
         ]
-    },
-    {
-        "id": "9fd0de78d517fcc9",
-        "type": "comment",
-        "z": "85e21fcb925ef32f",
-        "name": "Needs Fixing",
-        "info": "",
-        "x": 250,
-        "y": 1240,
-        "wires": []
     },
     {
         "id": "95bf73e1f0d68181",
@@ -2023,26 +1675,6 @@
         ]
     },
     {
-        "id": "e02713f3ebea0b0d",
-        "type": "function",
-        "z": "85e21fcb925ef32f",
-        "g": "6785b9f659322af5",
-        "name": "Check Setting",
-        "func": "tray = global.get('tray');\nglobal.set('settingInProgress', false);\nswitch(msg.payload.address)\n{\n    case 1:\n        tray.regState.value         = msg.payload.value;\n        break;\n    case 2:\n        tray.num50HzCycles.value    = msg.payload.value;\n        break;\n    case 3:\n        tray.rampTemp.value          = msg.payload.value / 10;\n        break;\n    case 4:\n        tray.propK.value            = msg.payload.value / 100;\n        break;\n    case 5:\n        tray.intK.value             = msg.payload.value / 100;\n        break;\n    case 6:\n        tray.dutyFactorSet.value    = msg.payload.value / 10;\n        break;\n    case 7:\n        tray.numTempSamples.value   = msg.payload.value;\n        break;\n    default:\n        break;\n}\nreturn {topic:'settingCompleted', payload:true};\n",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 740,
-        "y": 340,
-        "wires": [
-            [
-                "6af21e76e0c4ad80"
-            ]
-        ]
-    },
-    {
         "id": "5e7d2de841bcb0c1",
         "type": "function",
         "z": "85e21fcb925ef32f",
@@ -2068,21 +1700,18 @@
         "z": "85e21fcb925ef32f",
         "g": "cc88dacde90c32cd",
         "name": "Create Readings",
-        "func": "var tray = global.get('tray');\nvar initDevice             = msg.payload[0];\nvar newData = true;\ntray.regState.value         = msg.payload[1];\ntray.num50HzCycles.value    = msg.payload[2];\ntray.rampTemp.value         = msg.payload[3] / 10;\ntray.propK.value            = msg.payload[4] / 100;\ntray.intK.value             = msg.payload[5] / 100;\ntray.dutyFactorSet.value    = msg.payload[6] / 10;\ntray.numTempSamples.value   = msg.payload[7];\ntray.temperature.value      = msg.payload[8] / 10;\ntray.dutyFactor.value       = msg.payload[9] / 10;\ntray.avgDutyFactor.value    = msg.payload[10] / 10;\n\ntray.timeStamp = msg.timeStamp;\n\nvar initDeviceMsg = null;\nif (initDevice == 1)\n{\n    initDeviceMsg = {topic:\"initDevice\",payload:true};\n    global.set('settingInProgress', true)\n}\nreturn  [{topic:'newReading', payload:newData},initDeviceMsg];\n",
-        "outputs": 2,
+        "func": "var tray = global.get('tray');\nvar newData = true;\ntray.regState.value         = msg.payload[1];\ntray.num50HzCycles.value    = msg.payload[2];\ntray.rampTemp.value         = msg.payload[3] / 10;\ntray.propK.value            = msg.payload[4] / 100;\ntray.intK.value             = msg.payload[5] / 100;\ntray.dutyFactorSet.value    = msg.payload[6] / 10;\ntray.numTempSamples.value   = msg.payload[7];\ntray.temperature.value      = msg.payload[8] / 10;\ntray.dutyFactor.value       = msg.payload[9] / 10;\ntray.avgDutyFactor.value    = msg.payload[10] / 10;\n\nreturn  {topic:msg.topic, payload:newData}\n",
+        "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 690,
+        "x": 650,
         "y": 640,
         "wires": [
             [
                 "99fbe8135d0ce161",
                 "465fe954.881be8"
-            ],
-            [
-                "74c6d394f2452a62"
             ]
         ]
     },
@@ -2123,8 +1752,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1200,
-        "y": 620,
+        "x": 1120,
+        "y": 680,
         "wires": [
             [
                 "e067291cdd1fd9f4"
@@ -2145,8 +1774,58 @@
         "correl": "",
         "expiry": "",
         "broker": "79250bf3.365cc4",
-        "x": 1360,
-        "y": 620,
+        "x": 1280,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "3026811a11de85fd",
+        "type": "serial out",
+        "z": "85e21fcb925ef32f",
+        "name": "BlinkyBus Out",
+        "serial": "a4f4c59daf894823",
+        "x": 350,
+        "y": 1000,
+        "wires": []
+    },
+    {
+        "id": "930cf5038252d1fd",
+        "type": "serial in",
+        "z": "85e21fcb925ef32f",
+        "name": "BlinkyBus In",
+        "serial": "a4f4c59daf894823",
+        "x": 530,
+        "y": 1000,
+        "wires": [
+            [
+                "1fc86ac13df1a13f"
+            ]
+        ]
+    },
+    {
+        "id": "9f8c3b4630e734a3",
+        "type": "link out",
+        "z": "85e21fcb925ef32f",
+        "name": "New Setting Out",
+        "mode": "link",
+        "links": [
+            "04d132d87ffeb91a"
+        ],
+        "x": 1055,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "3e4b93786a772644",
+        "type": "link out",
+        "z": "85e21fcb925ef32f",
+        "name": "Ramp out",
+        "mode": "link",
+        "links": [
+            "b0f91914917b2de1"
+        ],
+        "x": 1465,
+        "y": 760,
         "wires": []
     },
     {
@@ -2161,8 +1840,8 @@
         "initialize": "// Code added here will be run once\n// whenever the node is started.\n\ncontext.set('lastTime',new Date().getTime() - 2000);\ncontext.set('oldRegState',0);\ncontext.set('rampDirection',0);\ncontext.set('rampTemp',22);\n",
         "finalize": "",
         "libs": [],
-        "x": 1000,
-        "y": 780,
+        "x": 1040,
+        "y": 760,
         "wires": [
             [
                 "b2b4e2b1a8d11dd6"
@@ -2181,26 +1860,13 @@
         "arraySpltType": "len",
         "stream": false,
         "addname": "",
-        "x": 1150,
-        "y": 780,
+        "x": 1190,
+        "y": 760,
         "wires": [
             [
                 "47542af8a13f9fa3"
             ]
         ]
-    },
-    {
-        "id": "3e4b93786a772644",
-        "type": "link out",
-        "z": "85e21fcb925ef32f",
-        "name": "Ramp out",
-        "mode": "link",
-        "links": [
-            "b0f91914917b2de1"
-        ],
-        "x": 1425,
-        "y": 780,
-        "wires": []
     },
     {
         "id": "47542af8a13f9fa3",
@@ -2220,8 +1886,8 @@
         "drop": false,
         "allowrate": false,
         "outputs": 1,
-        "x": 1310,
-        "y": 780,
+        "x": 1350,
+        "y": 760,
         "wires": [
             [
                 "3e4b93786a772644"
